@@ -27,86 +27,18 @@ public class Main {
 		
 		// Reading model
 		Statechart s = (Statechart) root;
-		//TreeIterator<EObject> iterator = s.eAllContents();
-		//while (iterator.hasNext()) {
-		//	EObject content = iterator.next();
-		//	if(content instanceof State) {
-		//		State state = (State) content;
-		//		System.out.println(state.getName());
-		//	}
-			//else if(content instanceof Transition) {
-			//	Transition transition = (Transition) content;
-			//	System.out.println(transition.toString());
-			//}
 		
-		//}
-		/*if(content instanceof State) {
-			State state = (State) content;
-			System.out.println(i + "\tState: " + state.getName());
-		}else if(content instanceof Transition){
-			Transition transition = (Transition) content;
-			System.out.println(i + "\tTransition: " + transition.getSpecification());
-		}else if(content instanceof Entry){
-			Entry entry = (Entry) content;
-			System.out.println(i + "\tEntry: " + entry.getName());
-		}else if(content instanceof Region){
-			Region region = (Region) content;
-			System.out.println(i + "\tRegion: " + region.getName());
-		}*/
 		TreeIterator<EObject> iterator = s.eAllContents();
-		int i = 0;
-		EObject content2 = null;
-		EObject content1 = null; 
-		while (iterator.hasNext()) {
-			 if(i == 0) {
-				content1 = iterator.next();
-			}else {
-				if(content2 instanceof State) {
-					content1 = content2;
-				}
-			}
-			content2 = iterator.next();
-			
-			if(content1 instanceof State && content2 instanceof State) {
-				State state = (State) content1;
-				State state2 = (State) content2; 
-				System.out.println(state.getName() + "\t-->\t" + state2.getName());
-			}
-			
-			/*
-			if(content.eClass().getName() == "Transition") {
-				System.out.println("Start: " + content.eClass().getName() + "\t-->\tEnd: " + content2.eClass().getName());
-			}else {
-				System.out.println("Start: " + content.eClass().getName() + "\t\t-->\tEnd: " + content2.eClass().getName());
-			}*/
-			/*
+		
+		while(iterator.hasNext()) {
+			EObject content = iterator.next();
 			if(content instanceof State) {
 				State state = (State) content;
-				System.out.println(i + "\tState: " + state.getName());
-			}else if(content instanceof Transition){
+				System.out.println(state.getName());
+			}else if(content instanceof Transition) {
 				Transition transition = (Transition) content;
-				System.out.println(i + "\tTransition: " + transition.getSpecification());
-			}else if(content instanceof Entry){
-				Entry entry = (Entry) content;
-				System.out.println(i + "\tEntry: " + entry.getName());
-			}else if(content instanceof Region){
-				Region region = (Region) content;
-				System.out.println(i + "\tRegion: " + region.getName());
+				System.out.println("Source: " + transition.getSource().getName() + "\t-->\tTarget: " + transition.getTarget().getName());
 			}
-			if(content2 instanceof State) {
-				State state = (State) content2;
-				System.out.println(i + "\tState: " + state.getName());
-			}else if(content2 instanceof Transition){
-				Transition transition = (Transition) content2;
-				System.out.println(i + "\tTransition: " + transition.getSpecification());
-			}else if(content2 instanceof Entry){
-				Entry entry = (Entry) content2;
-				System.out.println(i + "\tEntry: " + entry.getName());
-			}else if(content2 instanceof Region){
-				Region region = (Region) content2;
-				System.out.println(i + "\tRegion: " + region.getName());
-			}*/
-			i++;
 		}
 		
 		// Transforming the model into a graph representation
