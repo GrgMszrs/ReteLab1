@@ -5,8 +5,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 import org.yakindu.sct.model.sgraph.State;
 import org.yakindu.sct.model.sgraph.Transition;
-import org.yakindu.sct.model.sgraph.Entry;
-import org.yakindu.sct.model.sgraph.Region;
 import org.yakindu.sct.model.sgraph.Statechart;
 
 import hu.bme.mit.model2gml.Model2GML;
@@ -29,12 +27,38 @@ public class Main {
 		Statechart s = (Statechart) root;
 		
 		TreeIterator<EObject> iterator = s.eAllContents();
-		
+		int i = 0;
 		while(iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof State) {
 				State state = (State) content;
-				System.out.println(state.getName());
+				if(state.getOutgoingTransitions().size() > 0) {
+					System.out.println(state.getName());
+				}else {
+					System.out.println("Csapda state neve:\t" + state.getName());
+				}
+				if(state.getName().isEmpty()) {
+					boolean isContained = false;
+					
+					do {
+						String name = "RandomName" + i;
+						System.out.println(name);
+						i++;
+						TreeIterator<EObject> iterator2 = s.eAllContents();
+						while(iterator2.hasNext()) {
+							EObject content2 = iterator2.next();
+							if(content2 instanceof State) {
+								State state2 = (State) content2;
+								if(state2.getName().equals(state.getName()) && !state2.getName().isEmpty()) {
+									isContained = true;
+									break;
+								}
+							}
+						}
+						state.setName(name);
+					}while(isContained);
+				}
+				
 			}else if(content instanceof Transition) {
 				Transition transition = (Transition) content;
 				System.out.println("Source: " + transition.getSource().getName() + "\t-->\tTarget: " + transition.getTarget().getName());
