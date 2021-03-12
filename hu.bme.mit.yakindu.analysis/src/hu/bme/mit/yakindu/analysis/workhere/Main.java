@@ -5,6 +5,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 import org.yakindu.sct.model.sgraph.State;
 import org.yakindu.sct.model.sgraph.Transition;
+import org.yakindu.sct.model.stext.stext.VariableDefinition;
+import org.yakindu.sct.model.stext.stext.impl.EventDefinitionImpl;
 import org.yakindu.sct.model.sgraph.Statechart;
 
 import hu.bme.mit.model2gml.Model2GML;
@@ -27,7 +29,18 @@ public class Main {
 		Statechart s = (Statechart) root;
 		
 		TreeIterator<EObject> iterator = s.eAllContents();
-		int i = 0;
+		while(iterator.hasNext()) {
+			EObject content = iterator.next();
+			if(content instanceof VariableDefinition) {
+				VariableDefinition variabledefinition = (VariableDefinition) content;
+				System.out.println(variabledefinition.eClass().getName() + ":\t" + variabledefinition.getName());
+			}else if(content instanceof EventDefinitionImpl) {
+				EventDefinitionImpl eventdefinitionimpl = (EventDefinitionImpl) content;
+				System.out.println(eventdefinitionimpl.eClass().getName() + ":\t" + eventdefinitionimpl.getName());
+			}
+		}
+		
+		/*int i = 0;
 		while(iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof State) {
@@ -63,7 +76,7 @@ public class Main {
 				Transition transition = (Transition) content;
 				System.out.println("Source: " + transition.getSource().getName() + "\t-->\tTarget: " + transition.getTarget().getName());
 			}
-		}
+		}*/
 		
 		// Transforming the model into a graph representation
 		String content = model2gml.transform(root);
