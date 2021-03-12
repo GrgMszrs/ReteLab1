@@ -1,5 +1,11 @@
 package hu.bme.mit.yakindu.analysis.workhere;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
@@ -10,6 +16,10 @@ import org.yakindu.sct.model.stext.stext.impl.EventDefinitionImpl;
 import org.yakindu.sct.model.sgraph.Statechart;
 
 import hu.bme.mit.model2gml.Model2GML;
+import hu.bme.mit.yakindu.analysis.RuntimeService;
+import hu.bme.mit.yakindu.analysis.TimerService;
+import hu.bme.mit.yakindu.analysis.example.ExampleStatemachine;
+import hu.bme.mit.yakindu.analysis.example.IExampleStatemachine;
 import hu.bme.mit.yakindu.analysis.modelmanager.ModelManager;
 
 public class Main {
@@ -29,16 +39,67 @@ public class Main {
 		Statechart s = (Statechart) root;
 		
 		TreeIterator<EObject> iterator = s.eAllContents();
+		List<String> variables = new ArrayList<String>(); 
+		List<String> events = new ArrayList<String>(); 
 		while(iterator.hasNext()) {
 			EObject content = iterator.next();
 			if(content instanceof VariableDefinition) {
 				VariableDefinition variabledefinition = (VariableDefinition) content;
-				System.out.println(variabledefinition.eClass().getName() + ":\t" + variabledefinition.getName());
+				variables.add(variabledefinition.getName());
+				//System.out.println(variabledefinition.eClass().getName() + ":\t" + variabledefinition.getName());
 			}else if(content instanceof EventDefinitionImpl) {
 				EventDefinitionImpl eventdefinitionimpl = (EventDefinitionImpl) content;
-				System.out.println(eventdefinitionimpl.eClass().getName() + ":\t" + eventdefinitionimpl.getName());
+				events.add(eventdefinitionimpl.getName());
+				//System.out.println(eventdefinitionimpl.eClass().getName() + ":\t" + eventdefinitionimpl.getName());
 			}
 		}
+		
+		System.out.println("public class RunStatechart {\n\n" + 
+				   "\tpublic static void main(String[] args) throws IOException {\n" +
+				   "\t\tExampleStatemachine s = new ExampleStatemachine();\n" + 
+				   "\t\ts.setTimer(new TimerService());\n" +
+				   "\t\tRuntimeService.getInstance().registerStatemachine(s, 200);\n" +
+				   "\t\ts.init();\n" +
+				   "\t\ts.enter();\n" +
+				   "\t\tBufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n" +
+				   "\t\twhile(true) {\n" +
+				   "\t\t\tString line = reader.readLine();");
+		for(int i = 0; i < events.size(); i++) {
+			if(i == 0) {
+				System.out.println("\t\t\tif(line.equals(\"" + events.get(i) + "\")) {");
+			}else {
+				System.out.println("\t\t\t}else if(line.equals(\"" + events.get(i) + "\")) {");
+			}
+			String eCap = events.get(i).substring(0, 1).toUpperCase() + events.get(i).substring(1);
+			System.out.println("\t\t\t\ts.raise" + eCap + "();\n" +
+							   "\t\t\t\ts.runCycle();");
+		}
+		
+		System.out.println("\t\t\t}else if(line.equals(\"" + "exit" + "\")) {\n" +
+					       "\t\t\t\tprint(s);\n" +
+						   "\t\t\t\tbreak;\n" + 
+					       "\t\t\t}\n" +
+						   "\t\t\tprint(s);\n" +
+					       "\t\t}\n" +
+						   "\t\treader.close();\n" +
+					       "\t\tSystem.exit(0);\n" +
+						   "\t}\n\n" +
+					       "\tpublic static void print(IExampleStatemachine s) {");
+		
+		for(int i = 0; i < variables.size(); i++) {
+			String vCap = variables.get(i).substring(0, 1).toUpperCase() + variables.get(i).substring(1);
+			System.out.println("\t\tSystem.out.println(\"" + vCap.charAt(0) + " = \" + s.getSCInterface().get" + vCap + "());");
+		}
+		
+		System.out.println("\t}\n" +
+						   "}");
+		
+		/*System.out.println("public static void print(IExampleStatemachine s) {");
+		for(int i = 0; i < variables.size(); i++) {
+			String vCap = variables.get(i).substring(0, 1).toUpperCase() + variables.get(i).substring(1);
+			System.out.println("\tSystem.out.println(\"" + vCap.charAt(0) + " = \" + s.getSCInterface().get" + vCap + "());");
+		}
+		System.out.println("}");*/
 		
 		/*int i = 0;
 		while(iterator.hasNext()) {
