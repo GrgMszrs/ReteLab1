@@ -3,11 +3,20 @@ package hu.bme.mit.yakindu.analysis.workhere;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
+import org.yakindu.sct.model.sgraph.Statechart;
+import org.yakindu.sct.model.stext.stext.VariableDefinition;
+import org.yakindu.sct.model.stext.stext.impl.EventDefinitionImpl;
 
 import hu.bme.mit.yakindu.analysis.RuntimeService;
 import hu.bme.mit.yakindu.analysis.TimerService;
 import hu.bme.mit.yakindu.analysis.example.ExampleStatemachine;
 import hu.bme.mit.yakindu.analysis.example.IExampleStatemachine;
+import hu.bme.mit.yakindu.analysis.modelmanager.ModelManager;
 
 /*public class RunStatechart {
 	
@@ -47,7 +56,7 @@ import hu.bme.mit.yakindu.analysis.example.IExampleStatemachine;
 
 public class RunStatechart {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {		
 		ExampleStatemachine s = new ExampleStatemachine();
 		s.setTimer(new TimerService());
 		RuntimeService.getInstance().registerStatemachine(s, 200);

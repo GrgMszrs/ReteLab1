@@ -95,6 +95,10 @@ public class Main {
 						   "}");
 		
 		/*System.out.println("public static void print(IExampleStatemachine s) {");
+		for(int i = 0; i < events.size(); i++) {
+			String eCap = events.get(i).substring(0, 1).toUpperCase() + events.get(i).substring(1);
+			System.out.println("\tSystem.out.println(\"" + eCap.charAt(0) + " = \" + s.getSCInterface().get" + eCap + "());");
+		}
 		for(int i = 0; i < variables.size(); i++) {
 			String vCap = variables.get(i).substring(0, 1).toUpperCase() + variables.get(i).substring(1);
 			System.out.println("\tSystem.out.println(\"" + vCap.charAt(0) + " = \" + s.getSCInterface().get" + vCap + "());");
